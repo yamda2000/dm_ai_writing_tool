@@ -4,9 +4,11 @@ import os
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-# Streamlit Cloud の secrets から API キーを環境変数にセット
+from utils.gemini_client import set_session_api_key
+
+# Streamlit Cloud の secrets からセッションキーをセット
 if "GEMINI_API_KEY" in st.secrets:
-    os.environ["GEMINI_API_KEY"] = st.secrets["GEMINI_API_KEY"]
+    set_session_api_key(st.secrets["GEMINI_API_KEY"])
 
 from tools.article import write_article
 from tools.email_reply import reply_email
@@ -66,12 +68,6 @@ with st.sidebar:
     st.markdown("## ✍️ AI ライティングツール")
     st.markdown("---")
     selected_label = st.radio("ツールを選択", list(TOOLS.keys()), label_visibility="collapsed")
-    st.markdown("---")
-    st.markdown("### ⚙️ API 設定")
-    api_key_input = st.text_input("Gemini API キー", type="password", placeholder="AIza...",
-                                   help=".env の GEMINI_API_KEY でも設定できます")
-    if api_key_input:
-        os.environ["GEMINI_API_KEY"] = api_key_input
     st.markdown("---")
     st.caption("Powered by Google Gemini")
 
